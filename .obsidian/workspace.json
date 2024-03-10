@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "linux/test.md",
+                "file": "linux/Installing EndeavourOS in terminal with partitioning.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "linux/test.md",
+                "file": "linux/Installing EndeavourOS in terminal with partitioning.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "linux/test.md",
+                "file": "linux/Installing EndeavourOS in terminal with partitioning.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "linux/test.md"
+                "file": "linux/Installing EndeavourOS in terminal with partitioning.md"
               }
             }
           }
@@ -149,7 +149,7 @@
   "active": "95c4c7e46a9ae4e9",
   "lastOpenFiles": [
     "README.md",
-    "linux/test.md",
+    "linux/Installing EndeavourOS in terminal with partitioning.md",
     "linux",
     "Untitled.md",
     "this is a test.md",
