@@ -46,7 +46,7 @@
       }
     ],
     "verifiedRepo": true,
-    "rateLimit": 4994
+    "rateLimit": 4992
   },
   "upload": {
     "behavior": "fixed",
@@ -85,7 +85,7 @@
     "links": {
       "internal": false,
       "unshared": false,
-      "wiki": false,
+      "wiki": true,
       "slugify": "disable"
     }
   },
@@ -100,8 +100,8 @@
   },
   "plugin": {
     "shareKey": "share",
-    "fileMenu": false,
-    "editorMenu": false,
+    "fileMenu": true,
+    "editorMenu": true,
     "excludedFolder": [],
     "copyLink": {
       "enable": false,
