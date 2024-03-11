@@ -118,7 +118,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "linux/Installing EndeavourOS in terminal with partitioning.md"
+              }
             }
           }
         ]
@@ -138,7 +140,7 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "8a750b7de7affdaa",
+  "active": "732ef01034bf7319",
   "lastOpenFiles": [
     "things/testing.md",
     "linux/Installing EndeavourOS in terminal with partitioning.md",
