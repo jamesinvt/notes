@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "linux/commands.md",
+                "file": "linux/refrence/tmux/cheatsheet.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "linux/commands.md",
+                "file": "linux/refrence/tmux/cheatsheet.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "linux/commands.md",
+                "file": "linux/refrence/tmux/cheatsheet.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "linux/commands.md"
+                "file": "linux/refrence/tmux/cheatsheet.md"
               }
             }
           }
@@ -148,8 +148,14 @@
   },
   "active": "8a750b7de7affdaa",
   "lastOpenFiles": [
+    "linux/refrence/commands.md",
+    "linux/refrence/tmux/cheatsheet.md",
+    "linux/refrence/tmux",
+    "linux/refrence/i3/commands.md",
+    "linux/refrence/riverwm/troubleshooting.md",
+    "linux/refrence/i3/i3 - Reference Card_files/logo-30.png",
+    "linux/refrence/riverwm",
     "todo.md",
-    "linux/commands.md",
     "things/testing.md",
     "linux/Installing EndeavourOS in terminal with partitioning.md",
     "linux",
