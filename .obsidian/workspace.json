@@ -8,18 +8,31 @@
         "type": "tabs",
         "children": [
           {
-            "id": "8a750b7de7affdaa",
+            "id": "673942f049327a07",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "linux/refrence/tmux/cheatsheet.md",
+                "file": "linux/refrence/vim/cheatsheet.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "268ff703841bb546",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "books/programming/effective-go.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -48,7 +61,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "tag:#test",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -85,7 +98,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "linux/refrence/tmux/cheatsheet.md",
+                "file": "books/programming/effective-go.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +115,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "linux/refrence/tmux/cheatsheet.md",
+                "file": "books/programming/effective-go.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,16 +138,16 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "linux/refrence/tmux/cheatsheet.md"
+                "file": "books/programming/effective-go.md"
               }
             }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 200
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -146,21 +159,37 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "8a750b7de7affdaa",
+  "active": "268ff703841bb546",
   "lastOpenFiles": [
-    "linux/refrence/commands.md",
+    "books/programming/effective-go.md~",
+    "linux/refrence/vim/cheatsheet.md",
+    "books/programming/effective-go.md",
+    "books/programming",
+    "books",
     "linux/refrence/tmux/cheatsheet.md",
-    "linux/refrence/tmux",
-    "linux/refrence/i3/commands.md",
-    "linux/refrence/riverwm/troubleshooting.md",
-    "linux/refrence/i3/i3 - Reference Card_files/logo-30.png",
-    "linux/refrence/riverwm",
+    "linux/refrence/commands.md",
+    "linux/refrence/grep/commands.md",
+    "golang/notes/effective-go.md~",
+    "golang/links.md",
+    "README.md",
+    "golang/notes",
     "todo.md",
+    "git/git.md",
+    "git",
+    "go.md",
+    "golang",
+    "linux/refrence/misc/Date Time Format Codes.md",
+    "linux/refrence/grep/commands.md~",
+    "linux/refrence/vim/cheatsheet.md~",
+    "linux/refrence/misc",
+    "linux/refrence/riverwm/commands.md",
+    "linux/refrence/riverwm/troubleshooting.md",
+    "linux/refrence/pipewire/commands.md",
+    "linux/refrence/i3/commands.md",
+    "linux/refrence/pipewire/usefull links.md",
+    "linux/refrence/i3/i3 - Reference Card_files/logo-30.png",
     "things/testing.md",
     "linux/Installing EndeavourOS in terminal with partitioning.md",
-    "linux",
-    "this is a test.md",
-    "README.md",
-    "things"
+    "this is a test.md"
   ]
 }
