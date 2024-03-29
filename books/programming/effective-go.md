@@ -12,7 +12,7 @@ URL to book: https://go.dev/doc/effective_go#introduction
 
 disclaimer: these are just scratchpad notes as im reading this.
             if you aren't the auther of this repo you should not 
-            be using any inf as reference as 90% of it is wrong
+            be using any info as reference as 90% of it is wrong
 
 > [!Bing] HEY! LISTEN!
 > Author notes this is still a good guide but dated
@@ -104,6 +104,7 @@ for _, value := range dictionary
 for pos, char := range "string gang"
 for index, a := range arr
 ```
+### switch
 
 if no expression used in `switch` statement then it switches on true
 using this you can do if else if else chain
@@ -145,7 +146,6 @@ Loop:
 ```
 `continue` also allows labels but only for loops
 
-## switch
 
 You can use switch statements to discover dynamic types of interface variables
 this works through syntax assertion
@@ -164,7 +164,6 @@ switch t := t.(type) {
   case int: fmt.Printf("type is integer %d\n", t)
 }
 ```
-
 ## return values
 you can return multiple values
 ```golang
@@ -593,5 +592,83 @@ func main() {
   pointer methods can modify receiver.  if it were to get a value,
   instead of a reference it will get a copy and changes lost
   get around this rule using the `&` to make value addressable
+
+## interfaces and stuff
+
+### interfaces
+
+- provide a way to specify behavior of an object
+
+- a type can implement multiple interfaces
+
+(note: book showed regular functions and not a `type T interface {}`
+ tldr: just functions on the type. ex:
+ ```golang
+
+ func (d Dog) Bark() {
+     // bjork
+ }
+ ```
+
+
+### conversions
+
+section just showed how you can convert types to borrow behavior
+ex:
+```golang
+
+type Sequence []int
+func (s Sequence) String() string {
+    sort.Sort(s)
+    return gmt.Sprint([]int(s))
+}
+```
+this makes it so you don't have to format the output to be [0,1,2,3]
+can do that just by converting to `[]int` (base type is already that)
+and then call a print function
+
+- can satisfy multiple interfaces under one type
+```golang
+type Sequence []int
+func (s Sequence) Len() int // sort.Interface
+func (s Sequence) String() string // printer
+```
+
+- can assert types with `value.(type)`
+```golang
+
+str, ok := value.(string)
+if (ok) {
+    // is string
+}
+
+if str, ok := value.(string); ok {
+    return str
+} else if str, ok := value.(Stringer); ok {
+    return str.String()
+}
+```
+(note: if type assertion fails, it will still be of type string but will
+       have the zero value `""`
+
+if a types only purpose is to fulfill the needs of some local interface,
+don't export it(aka use a lower case name) only return the interface itself
+
+### interfaces and methods
+
+- almost anything that can have methods attached to it can satisfy an interface
+```golang
+
+type Sound interface {
+    play(Player) // anything that uses this interface can use this method
+}
+```
+`Player` here could be an interface and have even more methods to it
+
+- constructors should return interface values rather than concrete types so
+   that the types can easily be substituted
+
+- can use interfaces to separate concerns.  interfaces allow for implementation
+  to be decoupled from higher-level constructs
 
 
