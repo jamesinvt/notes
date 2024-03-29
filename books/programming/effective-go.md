@@ -345,7 +345,7 @@ can be expensive
 
 - use slices instead
 
-## slices
+### slices
 
 most go programming will use slices over arrays.  arrays are fine for things
 like transformation matrices since they have specific, unchanging dimensions
@@ -364,7 +364,7 @@ s2[0] = 9 // s = [9,2,3], b = [9,2,3]
     (note: similar to pointers)
 
 can easily take "slices" out of arrays
-```golangs
+```golang
 
 arr := [5]int{1,2,3,4,5}
 pizza : = arr[1:3] // 2 ,3 
@@ -388,23 +388,52 @@ func Append(slice, data []byte) []byte }
     copy(slice[sliceLength:], data)
     return slice
 }
-
 ```
-## maps
 
-defintion from the book: built-in data structure that associate values
+### 2D slices
+```golang
+type GuessWhoBoard [5][5] string //2d array
+type LinesOfText [][]byte //slice of a slice
+```
+- slices make it possible to have inner slices all be variable length
+
+- if slices grow or shrink might have to allocate each slice,
+  or if not it might be better to allocate a single array 
+  and point slices to it
+```golang
+// example of allocating each sub slice individually
+chessboard := make([][]rune, YSize) // allocate first line
+for i := range chessboard {
+    chessboard[i] = make([]rune, XSize) // allocate new lines
+}
+
+// example of one main board allocation
+
+chessboard := make([]rune, XSize*YSize) // allocate full board(not a 2d array)
+screen := make([][]rune, YSize) // allocate first 
+
+for i := range chessboard {
+    screen[i], chessboard := chessboard[:XSize], chessboard[XSize:]
+}
+```
+
+
+
+### maps
+
+- defintion from the book: built-in data structure that associate values
 of one type (the key) to another type (the element/value)
 
-the key can be of any type for which the equality operator is definted.
+- the key can be of any type for which the equality operator is defined.
     ex: ints, floats, complex numbers, strings, pointers, structs, arrays,
         and interfaces(as long as the dynamic type supports equality)
         (we love woke interfaces here)
 
-slices cannot be used as map keys because equality is not defined on them
+- slices cannot be used as map keys because equality is not defined on them
 
-maps are also references to an underline data structer.  just like slices.
-also like slices, if you pass to a function. any changes in that fn
-will be reflected in the caller as well 
+- maps are also references to an underline data structer.  just like slices.
+  also like slices, if you pass to a function.  any changes in that fn
+  will be reflected in the caller as well 
 
 constructing a map:
 ```golang
@@ -433,37 +462,136 @@ using multiple returns.  the second return being some form of "ok" or "err"
 
 use `delete(numbers, "one"` to delete a map entry
 
-// go back and read it
-// skipping printing section
-// skipping printing section
-// skipping printing section
-// skipping printing section
-// skipping printing section
-// skipping printing section
-// skipping printing section
-// skipping printing section
-// skipping printing section
-// skipping printing section
-// skipping printing section
-// skipping printing section
-// skipping printing section
-// go back and read it
-// go back and read it
-// go back and read it
-// go back and read it
-// go back and read it
-// go back and read it
-// go back and read it
-// go back and read it
-// go back and read it
+### printing
 
+- functions in `fmt` are all capitalized(how go exports functions)
+- functions like `Printf` and `Sprintf` take in a format string where
+  funcs like `Println` do not require that
 
+- `Fprint(os.Stdout, "i'm only ", 34, "\n")` takes in a `io.Writer`
+  as the first arguement
 
+- go doesn't take flags for things like signness or size, instead uses type
+
+- use `%v`(value) as a catch all to produce same format Println would give
+  also can print any value(arrays,slices, structs, maps)
+  use `%+v` to print the fields of structs as well
+
+- for maps print fns sort output lexcographically by key
+
+-`%q` and `%#q` will include the quotes and things like \n in output 
+
+- `%x` generates a hex string add a space and it adds a space between bytes
+
+- `%T` will print the type of a value
+
+Create a custom `String() string` on a type to print custom formatting every
+time a print function is called
+```golang
+func (p *Person) String() string {
+    return fmt.Sprintf("Name: %s Age: %d", p.name, p.age)
+}
+```
+- if you need to print values of type T as well as the pointer
+  the receiver for String must be of value type
+
+- Put a `v...interface{}` as the final param of `Printf` to mark an 
+  arbitrary numbers of params  `v` which is of type `[]interface{}` 
+  but if passed to another variadic function(takes a variable amount of args)
+
+- use `...int` to mark a variadic number of int types
+
+### append
 built in append fn
 ```golang
-func append(slice []T, elements ...T)[]T
+func append(slice []T, elements ...T)[]T // in builtin pkg
 ```
-book mentions
-
+book mentions:
 > You can't write a function where the type T is determined by the caller
 > That's why append is built in: it needs support from the compiler
+
+append will append the elements to the end of the slice and return the result.
+underlying array may change elsewhere in the program,  so result is returned
+
+use `...` operator
+```golang
+
+x := []int{1,2,3}
+y := append(x, 4, 5, 6} // works but we can do better
+z := []int{4,5,6}
+x = append(x, y...) // append([1,2,3], 4, 5, 6)
+```
+
+just passing in the array would not work since it wouldn't be the right type
+for the builtin append fn
+```golang
+// would be append([1,2,3], [4,5,6]) or append([]int, []int) 
+// see above for fn signature for append
+x = append(x, y)
+```
+
+## initialization
+
+### constants
+
+- created at compile time, even when defined as local.
+
+- can only be string, numbers, bools, and characters.
+
+- must be a constant expression(because it has to be evaulated at compile time)
+
+create enumberated constanst with the `iota` keyword
+```golang
+const (
+    _ = iota // can use _ to "waste" the first value if you dont want the zero
+    ONE = iota  // now starts off at 1
+    TWO
+    THREE
+)
+fmt.Println("%s, %s, $s", ONE, TWO, THREE) // 1, 2, 3
+```
+
+### init function
+
+- can have a(or multiple) `init` function with no params to setup program state
+
+- `init` is called after variable declarations and package initialization
+
+## methods
+
+### pointers vs values
+
+- functions can be defined for any named tyoe (except pointer or an interface
+
+- receiver doesn't have to be a struct
+
+define a method to on a type with receiver params
+```golang
+type GuestList []string
+func (list GuestList) AddGuest(str string) []string {
+    return append(list, str)
+}
+func main() {
+    list := GuestList{"Bob"}
+    list = list.AddGuest("Sarah") // ["Bob", "Sarah"]
+}
+```
+
+can use a pointer as a receiver to avoid having to return
+```golang
+type GuestList []string
+func (list *GuestList) AddGuest(str string) {
+     *list = append(*list, str)
+}
+func main() {
+    list := GuestList{"Bob"}
+    list.AddGuest("Sarah") // ["Bob", "Sarah"]
+}
+```
+- !! value methods can be invoked on pointers and values,
+  but pointer methods can only be invoked on pointers !! this rule is because
+  pointer methods can modify receiver.  if it were to get a value,
+  instead of a reference it will get a copy and changes lost
+  get around this rule using the `&` to make value addressable
+
+
