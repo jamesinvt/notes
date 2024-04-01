@@ -886,4 +886,135 @@ func Serve(clients chan *Request, quit chan bool {
 }
 ```
 
+### parallelization
+
+get hardware CPU cores
+```golang
+
+var numCPU = runtime.GOMAXPROCS(0) // can be configured by user
+// default for above: var numCPU = runtime.NumCPU()
+for i := 0; i < numCPU; i++ {
+    go fn(i)
+}
+// drain the channel
+for i := 0; i < numCPU; i++ {
+    <-c // wait for one task to complete
+}
+```
+
+- go is a concurrent language not a parallel one.  not all parallel 
+problems fit into Go's model.  they recommend https://go.dev/blog/waza-talk
+
+### leaky buffer
+
+example of a leaky bucket free list
+```golang
+
+var freeList = make(chan *Buffer, 100)
+var serverChannel = make(chan *Buffer)
+func client() {
+    for {
+        var b *Buffer
+        select {
+            case b = <-freeList:
+                // got one
+            default:
+                b = new(Buffer)
+        }
+        load(b)
+        serverChannel <- b
+    }
+}
+
+func server() {
+    for { 
+        b := <-serverChan // wait for work
+        process(b)
+        select {
+        case freeList <-b
+        // buffer on free list
+        default:
+        // free list full
+        }
+    }
+}
+```
+
+### errors
+
+- multiple returns bake it easy to returned detailed error info along with
+  the return value.  use this to give detailed error information
+- 
+- errors have a built in interface
+```golang
+
+type error interface {
+    Error() string
+}
+```
+
+- many functions will return error that is nil when all is right if there's
+  a problem something like `PathError` below can tel it what to do
+```golang
+
+type PathError struct {
+    Op string // "open" "unlink" etc..
+    Path string // file
+    Err error // returned by sys call
+}
+func (e *PathError) Error() string {
+    return e.Op + " "" + e.Path + ": " + e.Err.Error()
+} 
+```
+
+PathError error message:
+```golang
+
+open /etc/passwx: no such file or directory
+```
+- detailed errors often more helpful
+
+- errors should identify their origin such as the operation or package that generated the error
+
+### panic
+
+- used for when an error is unrecoverable
+- creates a run time error that will stop the program
+- takes a single arguement to be printed as the program dies
+- way to indicate that something "impossible" has happened,
+  like exiting an infinite loop
+```golang
+
+panic(fmt.Sptintf("something really bad happened"))
+```
+
+### recover
+
+- when panic is called, including implicity for run time errors like
+  indexing a slice OoB, or failing a type assertion
+- immedietly stops execution of the current function and begins
+  unwinding the stack of the gorouting, executing and defers along the way
+- when unwinding gets to top the program dies
+- possible to regain control and resume normal execution
+
+```golang 
+
+func server(workChan <-chan *Work) {
+    for work := range workChan {
+        go safelyDo(work)
+    }
+}
+func safelyDo(work *Work) {
+    defer func() {
+        if := err recover(); err != nil {
+            fmt.Println("work failed:", err)
+        }
+    }()
+    do(work)
+}
+```
+
+- recover always returns nil unless called directly from a deferred function
+- deferred code can cal lib routine that themeselves us panic and recover
+  without failing or executed code being affected by failing state
 
