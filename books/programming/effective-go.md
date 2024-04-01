@@ -672,3 +672,218 @@ type Sound interface {
   to be decoupled from higher-level constructs
 
 
+NOTE: ill need to go over this section again as much of it went over my head
+
+
+### blank identifier
+
+can use it when you want to ignore the first return value
+```golang
+if _, err = os.Stat(path; os.IsNotExit(err) {
+    fmt.Printf("%s does not exist\n", path)
+}
+```
+
+use it for unused imports
+```golang
+import "fmt"
+var _ = fmt.Printf
+```
+
+use it just to import the side effect
+```golang
+import _ "net/http/pprof"
+```
+
+check if type implements an interface
+```golang
+
+    if _, ok = := val.(Foo); ok {
+        fmt.Println("Yep")
+    }
+```
+
+guarantee that an type satisfies an interface. 
+```golang
+
+var _ json.Marshaler = (*RawMessage)(nil)
+```
+converts *RawMessage into a a Marshaler.  Only compiles if RawMessage
+implements Marshaler.  Erros out if interface ever changes
+only used when no static conversions already present in the code
+
+### embedding
+
+```golang
+
+type Planter interface {
+    Plant(c Crop)
+}
+type Harvester interface {
+    Harvest(c Crop)
+}
+type PlanterHarvester interface {
+    *Planter
+    *Harvester
+}
+```
+only interfaces can be embedded into interfaces
+
+same thing can be done with structs
+
+```golang
+type FarmerPlanter struct {
+    *Farmer
+    *Planter // structs that might implement some interface
+}
+
+// note
+// above the structs are embeded
+// and methods come with
+// if fields used would have to
+// provide forwarding methods
+type FarmerPlanter struct {
+    farmer *Farmer
+    planter *Planter // structs that might implement some interface
+}
+func (p *PlanterHarvester) Plant(c Crop) {
+    p.planter.Plant(c)
+}
+```
+
+difference between embedding and subclassing is that the method is envoked
+from the outer type but the receiver for the method is the inner type
+
+
+## concurrency
+
+- go encourages shared values being passed around via channels
+- by design, only one goroutine has access to a value at any given time;
+  preventing data races
+- go slogan "dont communicate by sharing memory; share memory by communicating"
+- similar to unix pipelines where the output of one process is the input
+  to the next.
+- sender waits til it has data, receiver waits til it gets something.
+  means no need to do syncing manually with things like mutexes
+
+### goroutines
+
+- threads, coroutines, processes, etc.. convey inaccurate connotations
+- it is a function executing concurrently with other goroutines in the
+  same address space
+- cheap. allocated to the stack, starts small
+- grow/shrink by allocating/freeing heap storage as required
+- goroutines are "multiplexed" only multiple threads.  if one is blocked
+  then the others can carry on without them
+- prefix a funciton or method call with the go keyword to call a new goroutine
+```golang
+
+    go johnny.Go() // executes concurrently, does not wait
+    fmt.Println("fin")
+```
+- exits silently !!
+
+- can use function literals
+```golang
+func Announce(message string, delay time) {
+    go func() {
+        time.Sleep(delay)
+    }()
+}
+```
+( NOTE: function literals are closures.  variables referred to by the function
+lives on as long as they are active )
+
+### channels
+
+- allocated with make.  value acts as reference to an underlying data structure
+- optional param for buffer size, default = 0
+```golang
+a := make(chan int)
+b := make(chan int, 0)
+c := make(chan *os.File, 100)
+```
+
+- use `<-` to wait for data
+```golang
+a := make(chan int)
+go func() {
+    //sort
+    c <- 1 //send signal; val doesn't matter
+}()
+doSomething()
+<-c // waits for data from above sort goroutine; discard sent value
+
+- receivers alwats block until there's data to retrieve
+
+- if unbuffered, sender blocks until the receiver has received the value
+  if buffered, sender blocks only until the value has been copied
+    if buffer is full, then waiting until some receiver has retrieved a value
+
+- if for loop cariable is reused for each iteration and shared across
+  all go routines.  get around by passing in the arg to the closure
+  in the goroutine or create new instance of var
+```golang
+var sem = make(chan int, MaxOutstanding)
+func Serve(queue chan *Request) {
+    for req := range queue {
+        // req := req also works
+        sem <- 1
+        go func(req *Request) { // here
+            process(req)
+            <-sem
+        }(req) // and here
+    }
+}
+```
+
+- the number of goroutines limits the number of simultaneous calls
+
+- can also accept a channel as a parameter that will tell function when to quit
+```golang
+func handle(q chan *Request) {
+    for r := range q { 
+        process(r)
+    }
+}
+func Serve(clients chan *Requests, quit chan bool) {
+    for i := 0; i < MaxGoRoutines; i++ {
+        go handle(clients)
+    }
+<-quit
+}
+```
+
+### channels of channels
+
+- channels are first class values.  can be pass around.  common use of this
+  is to implement safe, parallel demultiplexing
+
+- can add channels and functions to types to let client decide what to do
+  with request
+```golang
+
+// client
+type Request struct {
+    args []int
+    f func([]int) int
+    resultChan chan int
+}
+request := &Request{[]int{3,4,5}, sum, make(chan int)+
+clientRequests <- request
+
+// server
+func handle(queue chan *Request) {
+    for req := range queue {
+        req.resultChan <- req.f(req.args)
+    }
+}
+func Serve(clients chan *Request, quit chan bool {
+    for i:= 0; i < Max; i++  {
+        go handle(clients)
+    }
+    <-quit
+}
+```
+
+

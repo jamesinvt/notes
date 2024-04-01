@@ -32,3 +32,12 @@ func (p *pp) doPrintln(a []any) {
 }
 
 ```
+
+can do `var{}.fn()` ex:
+```golang
+// Minimize the verbosity by using type aliasing
+type vec = vector.Vector
+
+// addition of two vectors
+result := vec{1, 2}.Add(vec{2, 4})
+```
